@@ -1745,6 +1745,25 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------- Responsive ---------- */
+.burger-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.burger-menu-btn:hover {
+  background: var(--bg-hover);
+}
+
 @media (max-width: 1200px) {
   .stats-grid,
   .summary-cards {
@@ -1755,23 +1774,90 @@ img { max-width: 100%; display: block; }
   }
 }
 
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
+@media (max-width: 1024px) {
+  .burger-menu-btn {
+    display: flex;
   }
-  .stats-grid,
-  .summary-cards {
-    grid-template-columns: 1fr;
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Hidden offscreen by default */
+    width: 250px;
+    height: 100vh;
+    z-index: 10000;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-lg);
+    display: flex !important; /* Force overrides default hides */
+  }
+  .sidebar.active {
+    left: 0;
+  }
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 9999;
+  }
+  .sidebar-backdrop.active {
+    display: block;
   }
   .pos-layout {
     grid-template-columns: 1fr;
     height: auto;
   }
+  .reports-kpi-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid,
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
   .info-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .reports-tables-row {
     grid-template-columns: 1fr;
   }
   .page-header {
     flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .top-header {
+    padding: 0 16px;
+  }
+  .profile-info {
+    display: none; /* Hide name/role on mobile header to save space */
+  }
+  .header-right {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .store-badge span {
+    display: none; /* Hide store name text to prevent overlapping */
+  }
+  .store-badge {
+    padding: 8px;
+    border-radius: var(--radius-full);
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+  .content-container {
+    padding: 16px;
+  }
+  .stat-card {
+    padding: 16px;
   }
 }
 

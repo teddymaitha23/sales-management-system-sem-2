@@ -187,6 +187,17 @@ function initApp() {
 
   // Sidebar navigation
   const navItems = document.querySelectorAll('.nav-item');
+  const sidebar = document.querySelector('.sidebar');
+  
+  // Create or select backdrop
+  let backdrop = document.getElementById('sidebarBackdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'sidebarBackdrop';
+    backdrop.className = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
@@ -195,8 +206,29 @@ function initApp() {
         showView(viewName);
         navItems.forEach(n => n.classList.remove('active'));
         item.classList.add('active');
+        
+        // Hide sidebar drawer on mobile after clicking
+        if (sidebar && sidebar.classList.contains('active')) {
+          sidebar.classList.remove('active');
+          backdrop.classList.remove('active');
+        }
       }
     });
+  });
+
+  // Burger menu toggle
+  const burgerBtn = document.getElementById('burgerMenuBtn');
+  if (burgerBtn && sidebar) {
+    burgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.toggle('active');
+      backdrop.classList.toggle('active');
+    });
+  }
+
+  backdrop.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    backdrop.classList.remove('active');
   });
 
   // Theme toggle
