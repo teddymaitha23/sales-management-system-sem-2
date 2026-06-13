@@ -1991,7 +1991,7 @@ function renderReportsAnalytics(container, kpis, monthlyLogs) {
   const topProducts = Object.values(productSales).sort((a, b) => b.unitsSold - a.unitsSold).slice(0, 5);
 
   container.innerHTML = `
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; align-items: start;">
+    <div class="reports-analytics-grid">
       <!-- Category Chart Card -->
       <div class="chart-card" style="margin: 0; padding: 24px;">
         <div class="chart-card-title">Category Sales Breakdown</div>
