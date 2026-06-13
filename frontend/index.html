@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniPOS — Advanced Management System</title>
+  <meta name="description" content="OmniPOS Admin Dashboard — Inventory, Sales, and Business Management System">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Custom Styling -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  
+  <!-- Auth Overlay -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-logo">OmniPOS</div>
+      <h2 id="authTitle" style="margin-bottom:8px; font-weight:700;">Sign In</h2>
+      <p id="authSubtitle" style="color:var(--text-muted); margin-bottom:24px; font-size:0.95rem;">Welcome back. Please enter your details.</p>
+      
+      <div class="auth-form">
+        <label>Email</label>
+        <input type="email" id="authEmail" placeholder="you@example.com">
+        
+        <label>Password</label>
+        <input type="password" id="authPassword" placeholder="••••••••">
+        
+        <button class="btn btn-primary" id="authSubmitBtn" style="width:100%; margin-top:10px; justify-content:center;">Sign In</button>
+      </div>
+      
+      <div style="margin-top:20px; text-align:center; font-size:0.9rem; color:var(--text-secondary);">
+        <span id="authSwitchText">Don't have an account?</span> 
+        <a href="#" id="authSwitchLink" style="color:var(--primary); font-weight:600; text-decoration:none;">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" class="app-container" style="display:none;">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span>OmniPOS</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Overview</div>
+        <a href="#" class="nav-item active" data-view="dashboard">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-view="pos">
+          <i class="fa-regular fa-window-maximize"></i>
+          <span>POS Terminal</span>
+        </a>
+        <a href="#" class="nav-item" data-view="orders">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Orders</span>
+        </a>
+        
+        <div class="nav-section-title">Management</div>
+        <a href="#" class="nav-item" data-view="products">
+          <i class="fa-solid fa-box-open"></i>
+          <span>Products</span>
+        </a>
+        <a href="#" class="nav-item" data-view="inventory">
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <span>Inventory</span>
+        </a>
+        <a href="#" class="nav-item" data-view="reports">
+          <i class="fa-regular fa-clock"></i>
+          <span>Reports</span>
+        </a>
+        <a href="#" class="nav-item" data-view="customers">
+          <i class="fa-regular fa-user"></i>
+          <span>Customers</span>
+        </a>
+        
+        <div class="nav-section-title">Administration</div>
+        <a href="#" class="nav-item" data-view="integrations">
+          <i class="fa-solid fa-plug"></i>
+          <span>Channel Integrations</span>
+        </a>
+        <a href="#" class="nav-item" data-view="product-settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Product Settings</span>
+        </a>
+        <a href="#" class="nav-item" data-view="store-settings">
+          <i class="fa-solid fa-gear"></i>
+          <span>Store Settings</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="theme-toggle" id="themeToggle">
+          <i class="fa-solid fa-moon"></i>
+          <span>Dark Mode</span>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h2 id="pageTitle" class="page-title">Admin Dashboard</h2>
+        </div>
+        
+        <div class="header-right">
+          <div class="store-badge">
+            <i class="fa-solid fa-store"></i>
+            <span>Main Store</span>
+          </div>
+          
+          <div class="icon-button notification-bell">
+            <i class="fa-regular fa-bell"></i>
+            <span class="badge-dot"></span>
+          </div>
+          
+          <div class="user-profile">
+            <div class="profile-avatar">H</div>
+            <div class="profile-info">
+              <span class="user-name" id="headerUserEmail">Loading...</span>
+              <span class="user-role">Admin</span>
+            </div>
+            <i class="fa-solid fa-right-from-bracket profile-arrow" id="logoutBtn" title="Sign Out" style="cursor:pointer; color:var(--danger); margin-left:10px;"></i>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Container -->
+      <main class="content-container" id="contentArea">
+        <div class="loading-spinner">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>Loading application data...</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
