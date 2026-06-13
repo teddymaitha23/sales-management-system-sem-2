@@ -845,9 +845,13 @@ app.get('/api/reports/monthly', async (req, res) => {
   res.json(finalReport);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
 
 // Prevent server crash on unhandled promise rejections or exceptions
 process.on('unhandledRejection', (reason, promise) => {
